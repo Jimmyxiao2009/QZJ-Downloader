@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>曲中剑 — 以剑为笔，以音为墨</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@300;400;500;600;700&family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- 水墨粒子背景 -->
+    <canvas id="ink-canvas"></canvas>
+
+    <!-- 环境氛围 -->
+    <div class="ambient-glow"></div>
+
+    <!-- 加载画面 -->
+    <div class="loader" id="loader">
+        <div class="loader-content">
+            <div class="loader-brush">
+                <svg viewBox="0 0 100 100" class="loader-circle">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.3"/>
+                    <circle cx="50" cy="50" r="35" fill="none" stroke="currentColor" stroke-width="0.5" opacity="0.2" stroke-dasharray="4 4"/>
+                </svg>
+                <div class="loader-char">剑</div>
+            </div>
+            <div class="loader-track">
+                <div class="loader-progress"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主导航 -->
+    <nav class="main-nav" id="nav">
+        <div class="nav-brand">
+            <span class="nav-seal">曲</span>
+            <span class="nav-title">曲中剑</span>
+        </div>
+        <div class="nav-links">
+            <a href="#hero" class="nav-link active" data-text="首页">首页</a>
+            <a href="#about" class="nav-link" data-text="缘起">缘起</a>
+            <a href="#gameplay" class="nav-link" data-text="剑诀">剑诀</a>
+            <a href="#music" class="nav-link" data-text="音律">音律</a>
+            <a href="#download" class="nav-link" data-text="入道">入道</a>
+        </div>
+        <button class="nav-toggle" id="navToggle" aria-label="菜单">
+            <span></span><span></span><span></span>
+        </button>
+    </nav>
+
+    <main class="site-main" id="main">
+
+        <!-- 首屏 Hero -->
+        <section class="hero" id="hero">
+            <div class="hero-inner">
+                <div class="hero-visual">
+                    <div class="sword-container" id="swordContainer">
+                        <div class="sword-glow"></div>
+                        <div class="sword-blade" id="swordBlade">
+                            <svg viewBox="0 0 60 400" fill="none" class="sword-svg">
+                                <!-- 剑身 -->
+                                <path d="M30 20 L35 380 L30 390 L25 380 Z" fill="url(#bladeGradient)" stroke="rgba(200,200,200,0.3)" stroke-width="0.5"/>
+                                <!-- 剑脊 -->
+                                <line x1="30" y1="20" x2="30" y2="380" stroke="rgba(255,255,255,0.4)" stroke-width="0.5"/>
+                                <!-- 剑格 -->
+                                <rect x="15" y="10" width="30" height="8" rx="2" fill="url(#guardGradient)"/>
+                                <!-- 剑柄 -->
+                                <rect x="26" y="0" width="8" height="10" rx="1" fill="url(#handleGradient)"/>
+                                <!-- 剑穗 -->
+                                <path d="M30 390 Q35 410 30 430 Q25 450 30 470" stroke="url(#tasselGradient)" stroke-width="1.5" fill="none" opacity="0.6"/>
+                                <defs>
+                                    <linearGradient id="bladeGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="rgba(220,220,220,0.9)"/>
+                                        <stop offset="50%" stop-color="rgba(180,180,180,0.7)"/>
+                                        <stop offset="100%" stop-color="rgba(200,200,200,0.5)"/>
+                                    </linearGradient>
+                                    <linearGradient id="guardGradient" x1="0" y1="0" x2="1" y2="0">
+                                        <stop offset="0%" stop-color="#8B6914"/>
+                                        <stop offset="50%" stop-color="#D4AF37"/>
+                                        <stop offset="100%" stop-color="#8B6914"/>
+                                    </linearGradient>
+                                    <linearGradient id="handleGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#4a3728"/>
+                                        <stop offset="100%" stop-color="#2a1f18"/>
+                                    </linearGradient>
+                                    <linearGradient id="tasselGradient" x1="0" y1="0" x2="0" y2="1">
+                                        <stop offset="0%" stop-color="#c9a96e"/>
+                                        <stop offset="100%" stop-color="#8b4513"/>
+                                    </linearGradient>
+                                </defs>
+                            </svg>
+                        </div>
+                        <div class="sword-aura" id="swordAura"></div>
+                    </div>
+                    <div class="ink-splashes" id="inkSplashes"></div>
+                </div>
+
+                <div class="hero-content">
+                    <div class="hero-eyebrow" data-reveal>
+                        <span class="eyebrow-line"></span>
+                        <span class="eyebrow-text">腾讯 NExT Studios</span>
+                    </div>
+                    <h1 class="hero-title" data-reveal>
+                        <span class="title-char">曲</span>
+                        <span class="title-char">中</span>
+                        <span class="title-char">剑</span>
+                    </h1>
+                    <p class="hero-subtitle" data-reveal>以剑为笔 · 以音为墨</p>
+                    <p class="hero-desc" data-reveal>
+                        一款将中国传统水墨画风与音乐节奏玩法<br>
+                        深度融合的创新武侠音游。<br>
+                        在古琴韵律中，挥剑对决，感受千年剑意。
+                    </p>
+                    <div class="hero-actions" data-reveal>
+                        <a href="#download" class="btn btn-primary">
+                            <span class="btn-text">立即入道</span>
+                            <svg class="btn-icon" width="16" height="16" viewBox="0 0 16 16" fill="none">
+                                <path d="M3 8h10M9 4l4 4-4 4" stroke="currentColor" stroke-width="1.5"/>
+                            </svg>
+                        </a>
+                        <a href="#gameplay" class="btn btn-ghost">
+                            <span class="btn-text">探索剑诀</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+            <div class="scroll-hint" id="scrollHint">
+                <div class="scroll-line">
+                    <div class="scroll-dot"></div>
+                </div>
+                <span class="scroll-text">向下探索</span>
+            </div>
+        </section>
+
+        <!-- 缘起 -->
+        <section class="section about" id="about">
+            <div class="section-header" data-reveal>
+                <span class="section-num">壹</span>
+                <h2 class="section-title">缘起</h2>
+                <p class="section-subtitle">The Origin</p>
+            </div>
+
+            <div class="about-grid">
+                <div class="about-visual" data-reveal>
+                    <div class="ink-frame">
+                        <div class="frame-inner">
+                            <div class="ink-mountain"></div>
+                            <div class="ink-cloud"></div>
+                            <div class="ink-moon"></div>
+                        </div>
+                        <div class="frame-border"></div>
+                    </div>
+                </div>
+
+                <div class="about-content">
+                    <div class="about-text" data-reveal>
+                        <p class="about-lead">
+                            当古琴的七弦之音遇见剑客的一剑封喉，当水墨的氤氲气韵碰撞节奏的精准律动——《曲中剑》便在这交汇之处诞生。
+                        </p>
+                        <p class="about-body">
+                            这是一款由腾讯 NExT Studios 倾力打造的音乐节奏游戏。游戏以中国传统古琴名曲为蓝本，将每一首古曲化作一场剑客对决。玩家将跟随《高山流水》《广陵散》《梅花三弄》等千古名曲的韵律，在水墨山水之间挥剑格挡、闪避反击。
+                        </p>
+                        <p class="about-body">
+                            每一笔音符都是一次出招，每一个节拍都是一次交锋。在黑白水墨的世界里，你是剑客，也是乐师。以剑为笔，以音为墨，书写属于你的江湖传说。
+                        </p>
+                    </div>
+
+                    <div class="about-features" data-reveal>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <circle cx="12" cy="12" r="10"/>
+                                    <path d="M12 6v6l4 2"/>
+                                </svg>
+                            </div>
+                            <div class="feature-info">
+                                <h4>节奏对决</h4>
+                                <p>跟随音乐节奏挥剑，精准击中节拍</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M2 12s4-8 10-8 10 8 10 8-4 8-10 8-10-8-10-8z"/>
+                                    <circle cx="12" cy="12" r="3"/>
+                                </svg>
+                            </div>
+                            <div class="feature-info">
+                                <h4>水墨意境</h4>
+                                <p>传统水墨画风，意境深远的视觉体验</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M9 18V5l12-2v13"/>
+                                    <circle cx="6" cy="18" r="3"/>
+                                    <circle cx="18" cy="16" r="3"/>
+                                </svg>
+                            </div>
+                            <div class="feature-info">
+                                <h4>古琴名曲</h4>
+                                <p>收录多首传世古琴经典，韵律悠扬</p>
+                            </div>
+                        </div>
+                        <div class="feature-item">
+                            <div class="feature-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M14.5 2H6a2 2 0 00-2 2v16a2 2 0 002 2h12a2 2 0 002-2V7.5L14.5 2z"/>
+                                    <polyline points="14 2 14 8 20 8"/>
+                                </svg>
+                            </div>
+                            <div class="feature-info">
+                                <h4>武侠故事</h4>
+                                <p>以曲为引，讲述剑客江湖的传奇</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 剑诀 -->
+        <section class="section gameplay" id="gameplay">
+            <div class="section-header" data-reveal>
+                <span class="section-num">贰</span>
+                <h2 class="section-title">剑诀</h2>
+                <p class="section-subtitle">The Swordplay</p>
+            </div>
+
+            <div class="gameplay-showcase">
+                <div class="gameplay-visual" data-reveal>
+                    <div class="game-screen">
+                        <div class="screen-content">
+                            <div class="rhythm-lane">
+                                <div class="lane-line"></div>
+                                <div class="note note-1" style="--delay: 0s">
+                                    <div class="note-glow"></div>
+                                </div>
+                                <div class="note note-2" style="--delay: 0.8s">
+                                    <div class="note-glow"></div>
+                                </div>
+                                <div class="note note-3" style="--delay: 1.6s">
+                                    <div class="note-glow"></div>
+                                </div>
+                                <div class="note note-4" style="--delay: 2.4s">
+                                    <div class="note-glow"></div>
+                                </div>
+                                <div class="hit-zone">
+                                    <div class="hit-ring"></div>
+                                    <div class="hit-core"></div>
+                                </div>
+                            </div>
+                            <div class="combo-display">
+                                <span class="combo-num">108</span>
+                                <span class="combo-label">连击</span>
+                            </div>
+                            <div class="score-bar">
+                                <div class="score-fill"></div>
+                            </div>
+                        </div>
+                        <div class="screen-reflection"></div>
+                    </div>
+                </div>
+
+                <div class="gameplay-mechanics">
+                    <div class="mechanic-card" data-reveal>
+                        <div class="mechanic-num">01</div>
+                        <h3 class="mechanic-title">听音辨位</h3>
+                        <p class="mechanic-desc">音符自屏幕上方滑落，在恰当时机点击、长按或滑动，与音乐节拍完美同步。每一个音符都是一次出招，精准击中即可积累连击。</p>
+                    </div>
+                    <div class="mechanic-card" data-reveal>
+                        <div class="mechanic-num">02</div>
+                        <h3 class="mechanic-title">剑气纵横</h3>
+                        <p class="mechanic-desc">连续击中音符积累剑气，释放华丽的剑气技能。剑气满溢时触发「剑意爆发」，进入无敌状态并获得双倍得分。</p>
+                    </div>
+                    <div class="mechanic-card" data-reveal>
+                        <div class="mechanic-num">03</div>
+                        <h3 class="mechanic-title">Boss 对决</h3>
+                        <p class="mechanic-desc">每首曲目末尾迎战剑客 Boss。Boss 拥有独特的攻击模式，需要玩家在节奏中闪避、格挡并寻找反击时机。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 音律 -->
+        <section class="section music" id="music">
+            <div class="section-header" data-reveal>
+                <span class="section-num">叁</span>
+                <h2 class="section-title">音律</h2>
+                <p class="section-subtitle">The Melody</p>
+            </div>
+
+            <div class="music-collection">
+                <div class="music-card" data-reveal>
+                    <div class="music-visual">
+                        <div class="music-wave">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                        <div class="music-overlay">
+                            <span class="music-difficulty">难度 ★★★☆☆</span>
+                        </div>
+                    </div>
+                    <div class="music-info">
+                        <h3 class="music-name">高山流水</h3>
+                        <p class="music-origin">古琴十大名曲之一</p>
+                        <p class="music-desc">伯牙鼓琴，志在高山。子期曰：「善哉，峨峨兮若泰山！」</p>
+                    </div>
+                </div>
+
+                <div class="music-card" data-reveal>
+                    <div class="music-visual">
+                        <div class="music-wave">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                        <div class="music-overlay">
+                            <span class="music-difficulty">难度 ★★★★☆</span>
+                        </div>
+                    </div>
+                    <div class="music-info">
+                        <h3 class="music-name">广陵散</h3>
+                        <p class="music-origin">古琴十大名曲之一</p>
+                        <p class="music-desc">聂政刺韩王曲，慷慨激昂，气势磅礴，千古绝响。</p>
+                    </div>
+                </div>
+
+                <div class="music-card" data-reveal>
+                    <div class="music-visual">
+                        <div class="music-wave">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                        <div class="music-overlay">
+                            <span class="music-difficulty">难度 ★★☆☆☆</span>
+                        </div>
+                    </div>
+                    <div class="music-info">
+                        <h3 class="music-name">梅花三弄</h3>
+                        <p class="music-origin">古琴十大名曲之一</p>
+                        <p class="music-desc">梅花一弄断人肠，梅花二弄费思量，梅花三弄风波起。</p>
+                    </div>
+                </div>
+
+                <div class="music-card" data-reveal>
+                    <div class="music-visual">
+                        <div class="music-wave">
+                            <span></span><span></span><span></span><span></span><span></span>
+                        </div>
+                        <div class="music-overlay">
+                            <span class="music-difficulty">难度 ★★★★★</span>
+                        </div>
+                    </div>
+                    <div class="music-info">
+                        <h3 class="music-name">渔樵问答</h3>
+                        <p class="music-origin">古琴十大名曲之一</p>
+                        <p class="music-desc">渔樵对话，笑谈古今。超然物外，悠然自得。</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 入道 -->
+        <section class="section download" id="download">
+            <div class="section-header" data-reveal>
+                <span class="section-num">肆</span>
+                <h2 class="section-title">入道</h2>
+                <p class="section-subtitle">Enter the Path</p>
+            </div>
+
+            <div class="download-content" data-reveal>
+                <div class="download-visual">
+                    <div class="qrcode-placeholder">
+                        <div class="qrcode-pattern">
+                            <div class="qr-row">
+                                <span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            <div class="qr-row">
+                                <span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            <div class="qr-row">
+                                <span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            <div class="qr-row">
+                                <span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                            <div class="qr-row">
+                                <span></span><span></span><span></span><span></span><span></span>
+                            </div>
+                        </div>
+                        <div class="qrcode-label">扫码下载</div>
+                    </div>
+                </div>
+
+                <div class="download-info">
+                    <h3 class="download-title">开启你的剑道之旅</h3>
+                    <p class="download-desc">
+                        在古琴的音律中挥剑，在水墨的意境中修行。<br>
+                        一曲一剑，一念一世界。
+                    </p>
+
+                    <div class="download-platforms">
+                        <a href="#" class="platform-btn">
+                            <div class="platform-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M17.05 20.28c-.98.95-2.05.88-3.08.4-1.09-.5-2.08-.48-3.24 0-1.44.62-2.2.44-3.06-.4C4.51 17.58 3.5 13.13 5.6 10.5c2.1-2.62 5.83-2.08 6.92-1.08 1.1-1 3.78-1.5 5.88.88 1.5 1.7 1.26 4.32.48 6.08-.18.4-.38.8-.6 1.2-.38.7-.78 1.4-1.23 1.7zM12.03 7.25c-.82-2.05.04-4.08 1.6-5.25 1.56-1.17 3.7-1.08 4.84.58-.58.34-1.12.78-1.56 1.3-1.1 1.28-1.38 3.1-.72 4.72-.6.2-1.24.3-1.88.3-1.02 0-2.04-.28-2.92-.82-.24-.16-.44-.34-.64-.54-.06-.06-.1-.14-.16-.2-.04-.04-.08-.1-.12-.14z"/>
+                                </svg>
+                            </div>
+                            <div class="platform-text">
+                                <span class="platform-label">App Store</span>
+                                <span class="platform-name">iOS 下载</span>
+                            </div>
+                        </a>
+
+                        <a href="#" class="platform-btn">
+                            <div class="platform-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path d="M3.609 1.814L13.792 12 3.61 22.186a.996.996 0 01-.61-.92V2.734a1 1 0 01.61-.92zm10.89 10.893l4.302 4.302L6.478 21.11a1.527 1.527 0 01-.158.09l10.18-9.203zm6.445-1.707L17.18 8.575l-3.273-3.273 6.037-3.42a.996.996 0 011.37.37l.003.006a.996.996 0 01-.37 1.37l-.003.002zm-7.165 1.707L6.48 2.89a1.527 1.527 0 01.157-.09l10.179 9.203-3.727 3.727z"/>
+                                </svg>
+                            </div>
+                            <div class="platform-text">
+                                <span class="platform-label">Google Play</span>
+                                <span class="platform-name">Android 下载</span>
+                            </div>
+                        </a>
+                    </div>
+
+                    <div class="download-meta">
+                        <span>版本 1.2.0</span>
+                        <span class="meta-divider">·</span>
+                        <span>大小 285 MB</span>
+                        <span class="meta-divider">·</span>
+                        <span>支持中文</span>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 页脚 -->
+        <footer class="site-footer">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <span class="footer-seal">曲</span>
+                    <span class="footer-title">曲中剑</span>
+                </div>
+                <p class="footer-tagline">以剑为笔，以音为墨</p>
+                <div class="footer-divider"></div>
+                <div class="footer-info">
+                    <p>腾讯 NExT Studios 出品</p>
+                    <p>© 2024 曲中剑 All Rights Reserved</p>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <script src="script.js"></script>
+</body>
+</html>
